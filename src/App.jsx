@@ -1,5 +1,7 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
-import Header from './components/Header';
+import Navbar from './components/Navbar';
+import Home from './components/Home';
 import LeaveApplicationForm from './components/LeaveApplicationForm';
 import LeavePolicy from './components/LeavePolicy';
 import LeaveStatus from './components/LeaveStatus';
@@ -8,7 +10,6 @@ import ApplicationFlow from './components/ApplicationFlow';
 import ApprovalFlow from './components/ApprovalFlow';
 
 function App() {
-  const [currentView, setCurrentView] = useState('application');
   const [applications, setApplications] = useState([]);
 
   const handleLeaveSubmit = (formData) => {
@@ -21,60 +22,26 @@ function App() {
     setApplications(prev => [...prev, newApplication]);
   };
 
-  const handleStatusChange = (id, newStatus) => {
-    setApplications(prev =>
-      prev.map(app =>
-        app.id === id ? { ...app, status: newStatus, updatedAt: new Date().toISOString() } : app
-      )
-    );
-  };
-
-  const getSectionTitle = () => {
-    switch (currentView) {
-      case 'application': return 'Apply for Leave';
-      case 'policy': return 'Leave Policy';
-      case 'applicationFlow': return 'Application Process';
-      case 'approvalFlow': return 'Approval Process';
-      case 'status': return 'Leave Status';
-      case 'report': return 'Leave Report';
-      default: return 'Apply for Leave';
-    }
-  };
-
-  const renderContent = () => {
-    switch (currentView) {
-      case 'application':
-        return <LeaveApplicationForm onSubmit={handleLeaveSubmit} />;
-      case 'policy':
-        return <LeavePolicy />;
-      case 'applicationFlow':
-        return <ApplicationFlow />;
-      case 'approvalFlow':
-        return <ApprovalFlow />;
-      case 'status':
-        return <LeaveStatus applications={applications} onStatusChange={handleStatusChange} />;
-      case 'report':
-        return <LeaveReport applications={applications} />;
-      default:
-        return <LeaveApplicationForm onSubmit={handleLeaveSubmit} />;
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header onNavigate={setCurrentView} currentView={currentView} />
-      <main className="container mx-auto px-4 pt-24 pb-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-company-800">{getSectionTitle()}</h1>
-            <div className="h-1 w-20 bg-company-600 mt-2"></div>
+    <Router>
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <main className="container mx-auto px-4 pt-24 pb-12">
+          <div className="max-w-7xl mx-auto">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/home" element={<Navigate to="/" replace />} />
+              <Route path="/application-process" element={<ApplicationFlow />} />
+              <Route path="/approval-process" element={<ApprovalFlow />} />
+              <Route path="/apply" element={<LeaveApplicationForm onSubmit={handleLeaveSubmit} />} />
+              <Route path="/policy" element={<LeavePolicy />} />
+              <Route path="/status" element={<LeaveStatus applications={applications} />} />
+              <Route path="/report" element={<LeaveReport applications={applications} />} />
+            </Routes>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            {renderContent()}
-          </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </Router>
   );
 }
 

@@ -24,7 +24,7 @@ const LeaveReport = ({ applications }) => {
   useEffect(() => {
     // Calculate leave types breakdown
     const leaveTypes = {};
-    applications.forEach(app => {
+    applications?.forEach(app => {
       leaveTypes[app.leaveType] = (leaveTypes[app.leaveType] || 0) + 1;
     });
     
@@ -36,7 +36,7 @@ const LeaveReport = ({ applications }) => {
     
     // Calculate status breakdown
     const statuses = {};
-    applications.forEach(app => {
+    applications?.forEach(app => {
       const status = app.status || 'pending';
       statuses[status] = (statuses[status] || 0) + 1;
     });
@@ -51,7 +51,7 @@ const LeaveReport = ({ applications }) => {
     const months = {};
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     
-    applications.forEach(app => {
+    applications?.forEach(app => {
       const startDate = new Date(app.startDate);
       const month = monthNames[startDate.getMonth()];
       months[month] = (months[month] || 0) + 1;
@@ -75,9 +75,9 @@ const LeaveReport = ({ applications }) => {
   };
   
   // Calculate total leave days taken
-  const totalLeaveDays = applications.reduce((total, app) => {
+  const totalLeaveDays = applications?.reduce((total, app) => {
     return total + calculateDays(app.startDate, app.endDate);
-  }, 0);
+  }, 0) || 0;
 
   return (
     <div>
@@ -94,7 +94,7 @@ const LeaveReport = ({ applications }) => {
                 <CardTitle className="text-lg font-medium text-gray-700">Total Leave Applications</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-bold text-company-700">{applications.length}</p>
+                <p className="text-3xl font-bold text-company-700">{applications?.length || 0}</p>
                 <p className="text-sm text-gray-500 mt-1">All time applications</p>
               </CardContent>
             </Card>
@@ -115,7 +115,7 @@ const LeaveReport = ({ applications }) => {
               </CardHeader>
               <CardContent>
                 <p className="text-3xl font-bold text-company-700">
-                  {applications.length ? Math.round((applications.filter(app => app.status === 'approved').length / applications.length) * 100) : 0}%
+                  {applications?.length ? Math.round((applications.filter(app => app.status === 'approved').length / applications.length) * 100) : 0}%
                 </p>
                 <p className="text-sm text-gray-500 mt-1">Of requests approved</p>
               </CardContent>
@@ -274,7 +274,7 @@ const LeaveReport = ({ applications }) => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {applications.slice(0, 5).map((app) => (
+                    {applications?.slice(0, 5).map((app) => (
                       <tr key={app.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 font-medium">{app.employeeName}</td>
                         <td className="px-6 py-4 capitalize">{app.leaveType}</td>
@@ -298,7 +298,7 @@ const LeaveReport = ({ applications }) => {
                         </td>
                       </tr>
                     ))}
-                    {applications.length === 0 && (
+                    {(!applications || applications.length === 0) && (
                       <tr>
                         <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
                           No leave applications found

@@ -3,6 +3,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { useToast } from "./ui/use-toast";
+import Heading from './ui/heading';
 
 const LeaveApplicationForm = ({ onSubmit }) => {
   const { toast } = useToast();
@@ -201,3 +202,14 @@ const LeaveApplicationForm = ({ onSubmit }) => {
 };
 
 export default LeaveApplicationForm;
+
+
+const ApplicationFlow = () => {
+  return (
+    <>
+      <Heading variant="h2" color="primary" className="mb-6">
+        Application Process
+      </Heading>
+    </>
+  );
+};

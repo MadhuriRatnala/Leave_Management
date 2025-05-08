@@ -3,12 +3,24 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Card, CardContent } from '../components/ui/card';
 import { useToast } from "../components/ui/use-toast";
+import Heading from './ui/heading';
 
-const LeaveStatus = ({ applications, onStatusChange }) => {
+const LeaveStatus = ({ applications = [], onStatusChange }) => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [isManager, setIsManager] = useState(false);
+
+  const filteredApplications = (applications || []).filter(app => {
+    const matchesSearch = 
+      app.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      app.leaveType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      app.reason.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = filterStatus === 'all' || app.status === filterStatus;
+    
+    return matchesSearch && matchesStatus;
+  });
 
   const calculateDays = (startDate, endDate) => {
     const start = new Date(startDate);
@@ -26,17 +38,6 @@ const LeaveStatus = ({ applications, onStatusChange }) => {
       year: 'numeric'
     });
   };
-
-  const filteredApplications = applications.filter(app => {
-    const matchesSearch = 
-      app.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      app.leaveType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.reason.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = filterStatus === 'all' || app.status === filterStatus;
-    
-    return matchesSearch && matchesStatus;
-  });
 
   const handleStatusChange = (id, newStatus) => {
     onStatusChange(id, newStatus);
@@ -60,7 +61,12 @@ const LeaveStatus = ({ applications, onStatusChange }) => {
 
   return (
     <div className="space-y-6">
+      <Heading variant="h2" color="primary" className="mb-6">
+        Leave Status
+      </Heading>
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* Search section */}
         <div className="flex-1 space-y-2">
           <label htmlFor="search" className="text-sm font-medium text-gray-700">
             Search Applications
@@ -74,6 +80,7 @@ const LeaveStatus = ({ applications, onStatusChange }) => {
           />
         </div>
         
+        {/* Filter section */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="space-y-2">
             <label htmlFor="statusFilter" className="text-sm font-medium text-gray-700">
@@ -109,6 +116,7 @@ const LeaveStatus = ({ applications, onStatusChange }) => {
         </div>
       </div>
 
+      {/* Applications table */}
       {filteredApplications.length === 0 ? (
         <Card>
           <CardContent className="p-6 text-center">
@@ -179,6 +187,7 @@ const LeaveStatus = ({ applications, onStatusChange }) => {
         </div>
       )}
 
+      {/* Manager instructions */}
       {isManager && (
         <div className="bg-company-50 p-4 rounded-md text-sm">
           <h4 className="font-medium text-company-800 mb-2">Manager Instructions:</h4>

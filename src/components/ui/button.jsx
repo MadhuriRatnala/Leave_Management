@@ -1,32 +1,62 @@
-import * as React from "react"
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Button = React.forwardRef(({ className, variant = "default", size = "default", ...props }, ref) => {
-  const baseStyles = "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+export { Button };
+
+const Button = ({
+  text,
+  variant = 'primary',
+  size = 'medium',
+  to,
+  onClick,
+  disabled = false,
+  className = '',
+  type = 'button',
+  fullWidth = false,
+  children,
+}) => {
+  const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-all duration-300';
   
   const variants = {
-    default: "bg-company-600 text-white hover:bg-company-700",
-    destructive: "bg-red-500 text-white hover:bg-red-600",
-    outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-    secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-    ghost: "hover:bg-accent hover:text-accent-foreground",
-    link: "text-company-600 underline-offset-4 hover:underline"
-  }
+    primary: 'bg-[#6B21A8] text-white hover:bg-[#581C87] active:bg-[#4C1D95] shadow-sm',
+    secondary: 'bg-gray-800 text-gray-100 hover:bg-gray-700 active:bg-gray-600',
+    outline: 'border border-[#6B21A8] text-[#6B21A8] hover:bg-[#6B21A8] hover:text-white',
+    gradient: 'bg-gradient-to-r from-[#6B21A8] to-[#7E22CE] text-white hover:opacity-90',
+    ghost: 'text-[#6B21A8] hover:bg-[#6B21A8]/20',
+    light: 'bg-[#581C87]/10 text-[#6B21A8] hover:bg-[#581C87]/20 active:bg-[#581C87]/30',
+  };
 
   const sizes = {
-    default: "h-10 px-4 py-2",
-    sm: "h-9 rounded-md px-3",
-    lg: "h-11 rounded-md px-8",
-    icon: "h-10 w-10"
+    small: 'px-3 py-1.5 text-sm',
+    medium: 'px-4 py-2 text-base',
+    large: 'px-6 py-2.5 text-lg',
+  };
+
+  const buttonStyles = `
+    ${baseStyles}
+    ${variants[variant]}
+    ${sizes[size]}
+    ${fullWidth ? 'w-full' : ''}
+    ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+    ${className}
+  `;
+
+  if (to) {
+    return (
+      <Link to={to} className={buttonStyles}>
+        {text}
+      </Link>
+    );
   }
 
   return (
     <button
-      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
-      ref={ref}
-      {...props}
-    />
-  )
-})
-Button.displayName = "Button"
-
-export { Button }
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={buttonStyles}
+    >
+      {text || children}
+    </button>
+  );
+};

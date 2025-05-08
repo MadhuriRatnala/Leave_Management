@@ -3,12 +3,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/ui/accordion";
 import React from 'react';
+import Heading from './ui/heading';
 
 const LeavePolicy = () => {
   const [activeTab, setActiveTab] = useState("quotas");
   
   return (
     <div>
+      <Heading variant="h2" color="primary" className="mb-6">
+        Leave Policy
+      </Heading>
+      
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="quotas">Leave Quotas</TabsTrigger>
@@ -184,4 +189,5 @@ const LeavePolicy = () => {
     </div>
   );
 };
+
 export default LeavePolicy;
