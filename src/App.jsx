@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import Navbar from './components/Navbar';
-import Home from './components/Home';
-import LeaveApplicationForm from './components/LeaveApplicationForm';
-import LeavePolicy from './components/LeavePolicy';
-import LeaveStatus from './components/LeaveStatus';
-import LeaveReport from './components/LeaveReport';
-import ApplicationFlow from './components/ApplicationFlow';
-import ApprovalFlow from './components/ApprovalFlow';
+import LeaveApplicationForm from './pages/LeaveApplicationForm';
+import LeavePolicy from './pages/LeavePolicy';
+import LeaveStatus from './pages/LeaveStatus';
+import LeaveReport from './pages/LeaveReport';
+import ApplicationFlow from './pages/ApplicationFlow';
+import ApprovalFlow from './pages/ApprovalFlow';
+import { ThemeProvider } from './context/themeContext';
 
 function App() {
   const [applications, setApplications] = useState([]);
@@ -23,14 +23,13 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <main className="container mx-auto px-4 pt-24 pb-12">
-          <div className="max-w-7xl mx-auto">
+    <ThemeProvider>
+      <Router>
+        <div className="min-h-screen transition-colors duration-200">
+          <Navbar />
+          <main className="container mx-auto px-4 py-8">
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/home" element={<Navigate to="/" replace />} />
+              <Route path="/" element={<Navigate to="/apply" replace />} />
               <Route path="/application-process" element={<ApplicationFlow />} />
               <Route path="/approval-process" element={<ApprovalFlow />} />
               <Route path="/apply" element={<LeaveApplicationForm onSubmit={handleLeaveSubmit} />} />
@@ -38,10 +37,10 @@ function App() {
               <Route path="/status" element={<LeaveStatus applications={applications} />} />
               <Route path="/report" element={<LeaveReport applications={applications} />} />
             </Routes>
-          </div>
-        </main>
-      </div>
-    </Router>
+          </main>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 

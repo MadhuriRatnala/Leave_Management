@@ -1,15 +1,15 @@
 import React from 'react';
-import LeaveApplicationForm from './LeaveApplicationForm';
-import LeavePolicy from './LeavePolicy';
-import LeaveStatus from './LeaveStatus';
-import LeaveReport from './LeaveReport';
+import LeaveApplicationForm from '../pages/LeaveApplicationForm';
+import LeavePolicy from '../pages/LeavePolicy';
+import LeaveStatus from '../pages/LeaveStatus';
+import LeaveReport from '../pages/LeaveReport';
 
-const Home = () => {
+const Home = ({ onLeaveSubmit, applications }) => {
   const sections = [
     {
       id: 'apply',
       title: 'Apply for Leave',
-      component: <LeaveApplicationForm />
+      component: <LeaveApplicationForm onSubmit={onLeaveSubmit} />
     },
     {
       id: 'policy',
@@ -19,29 +19,26 @@ const Home = () => {
     {
       id: 'status',
       title: 'Leave Status',
-      component: <LeaveStatus />
+      component: <LeaveStatus applications={applications} />
     },
     {
       id: 'report',
       title: 'Leave Report',
-      component: <LeaveReport />
+      component: <LeaveReport applications={applications} />
     }
   ];
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Main content */}
-      <div className="flex-1 overflow-y-auto px-4 py-8">
+    <div className="home">
+      <div className="content">
         {sections.map((section) => (
           <section
             key={section.id}
             id={section.id}
-            className="mb-8 bg-white rounded-lg shadow-sm border border-gray-200"
+            className="section"
           >
-            <div className="max-w-7xl mx-auto p-6">
-              <div className="py-4">
-                {section.component}
-              </div>
+            <div className="section-content">
+              {section.component}
             </div>
           </section>
         ))}
